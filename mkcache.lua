@@ -9,12 +9,11 @@ for _, b in ipairs(barrels) do
   local l = b.list()
   for i=1,size do
     local item = l[i] or {}
-    local stackSize = b.getItemLimit(i)
-    entry[i] = {
+    table.insert(entry, {
       name = item.name,
       count = item.count or 0,
-      limit = stackSize,
-    }
+      limit = b.getItemLimit(i),
+    })
   end
   table.insert(cache, entry)
 end
