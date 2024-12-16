@@ -10,7 +10,7 @@ local files = {
 
 local function download_file(url, path)
   local f = fs.open(path, "w")
-  r = http.get(url)
+  local r = http.get(url)
   f.write(r.readAll())
   f.close()
   r.close()
