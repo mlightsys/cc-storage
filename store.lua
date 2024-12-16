@@ -5,6 +5,19 @@ local incompleteStacks = setmetatable({}, {
     return t[k]
   end,
 })
+local ripairs = (function()
+  local function iter(t, i)
+    i = i - 1
+    if i ~= 0 then
+      return i, t[i]
+    end
+  end
+
+  return function(t)
+    return iter, t, #t + 1
+  end
+end)()
+
 local emptySlots = {}
 
 print("Processing storage unit state, please wait...")
@@ -26,9 +39,7 @@ for _, data in ipairs(cache.list) do
     local free = slotLimit - item.count
     if free == 0 then goto next_item end
 
-    local incompStackList = incompleteStacks[item.name]
-
-    table.insert(incompStackList, {
+    table.insert(incompleteStacks[item.name], {
       container = data.name,
       slot = i,
       free = free,
@@ -49,8 +60,7 @@ for slot, item in pairs(chest.list()) do
   local incompStackList = incompleteStacks[item.name]
   local count = item.count
 
-  for i=#incompStackList,1,-1 do
-    local incomplete = incompStackList[i]
+  for i, incomplete in ripairs(incompStackList) do
     count = count - move_item(slot, count, incomplete, item.name)
     if incomplete.free == 0 then
       table.remove(incompStackList, i)
@@ -61,8 +71,7 @@ for slot, item in pairs(chest.list()) do
     end
   end
 
-  for i=#emptySlots,1,-1 do
-    local incomplete = emptySlots[i]
+  for i, incomplete in ripairs(emptySlots) do
     count = count - move_item(slot, count, incomplete, item.name)
     table.remove(emptySlots, i)
     if incomplete.free > 0 then
