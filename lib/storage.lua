@@ -2,7 +2,7 @@ local CACHE = "cache.lt"
 
 local M = {cache = {}}
 
-function M.move(dest, destslot, src, srcslot, name, count)
+function M.move(dest, destSlot, src, srcSlot, name, count)
   local destName, srcName
   if type(src) == "string" then
     srcName = src
@@ -18,25 +18,27 @@ function M.move(dest, destslot, src, srcslot, name, count)
     destName = peripheral.getName(dest)
   end
 
-  local n = src.pushItems(destName, srcslot, count, destslot)
+  local n = src.pushItems(destName, srcSlot, count, destSlot)
 
-  local destCache = M.cache[destName]
+  local destCache = M.cache.map[destName]
   if destCache then
-    local slot = destCache[destslot]
+    -- Despoit
+    local slot = destCache[destSlot]
     if slot.count == 0 then
-      slot.limit = dest.getItemLimit(destslot)
+      slot.limit = dest.getItemLimit(destSlot)
     end
     slot.name = name
     slot.count = slot.count + count
   end
 
-  local srcCache = M.cache[srcName]
+  local srcCache = M.cache.map[srcName]
   if srcCache then
-    local slot = srcCache[srcslot]
+    -- Extract
+    local slot = srcCache[srcSlot]
     slot.count = slot.count - count
     if slot.count <= 0 then
       slot.name = nil
-      slot.limit = src.getItemLimit(srcslot)
+      slot.limit = src.getItemLimit(srcSlot)
     end
   end
 
