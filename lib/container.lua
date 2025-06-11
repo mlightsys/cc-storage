@@ -28,13 +28,24 @@ end
 function M.itemize(c)
   local entry = {name = peripheral.getName(c)}
   local l = c.list()
+  local emptySlot
   for i=1,c.size() do
-    local slot = l[i] or {}
-    table.insert(entry, {
-      name = slot.name,
-      count = slot.count or 0,
-      limit = c.getItemLimit(i),
-    })
+    local slot = l[i]
+    if slot == nil then
+      if emptySlot == nil then
+        emptySlot = {
+          count = 0,
+          limit = c.getItemLimit(i),
+        }
+      end
+      table.insert(entry, util.copy(emptySlot))
+    else
+      table.insert(entry, {
+        name = slot.name,
+        count = slot.count,
+        limit = c.getItemLimit(i),
+      })
+    end
   end
   return entry
 end
