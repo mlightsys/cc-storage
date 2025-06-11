@@ -5,18 +5,16 @@ local defaultdict = util.defaultdict
 
 local cache = storage.load()
 
+local capacity = 0
 local countMap = defaultdict(0)
 for _, container in ipairs(cache.list) do
   for _, item in ipairs(container) do
-    countMap[""] = countMap[""] + item.limit - item.count
+    capacity = capacity + item.limit
     if item.name ~= nil then
       countMap[item.name] = countMap[item.name] + item.count
     end
   end
 end
-
-local empty = countMap[""]
-countMap[""] = nil
 
 local total = 0
 local counts = {}
@@ -31,4 +29,4 @@ for _, entry in ipairs(counts) do
   print(("%s - %d"):format(entry.item, entry.count))
 end
 
-print(("Used: %d/%d"):format(total, total + empty))
+print(("Used: %d/%d"):format(total, capacity))
