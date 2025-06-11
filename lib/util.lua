@@ -17,8 +17,10 @@ function M.defaultdict(t)
   local f
   if type(t) == "function" then
     f = t
-  else
+  elseif type(t) == "table" then
     f = function() return M.copy(t) end
+  else
+    f = function() return t end
   end
 
   return setmetatable({}, {

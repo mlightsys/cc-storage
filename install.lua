@@ -4,9 +4,10 @@ local files = {
   "lib/container.lua",
   "lib/storage.lua",
   "lib/util.lua",
+  "du.lua",
+  "get.lua",
   "mkcache.lua",
   "store.lua",
-  "get.lua",
 }
 
 local function download_file(url, path)
