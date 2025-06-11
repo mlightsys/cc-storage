@@ -17,6 +17,10 @@ local function move_item(container, slot, count, entry, name)
 end
 
 local function get(item_name, amount)
+  if (string.find(item_name, ":", 1, true)) == nil then
+    item_name = "minecraft:" .. item_name
+  end
+
   for _, container in ipairs(cache.list) do
     for slot, item in ipairs(container) do
       if item.name ~= item_name then goto next_slot end

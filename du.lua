@@ -1,5 +1,5 @@
-local util = require("lib/util.lua")
-local storage = require("lib/storage.lua")
+local util = require("lib/util")
+local storage = require("lib/storage")
 
 local defaultdict = util.defaultdict
 
