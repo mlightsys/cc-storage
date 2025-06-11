@@ -6,6 +6,7 @@ local files = {
   "lib/util.lua",
   "mkcache.lua",
   "store.lua",
+  "get.lua",
 }
 
 local function download_file(url, path)
