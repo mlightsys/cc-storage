@@ -13,9 +13,12 @@ M.ripairs = (function()
   end
 end)()
 
-function M.defaultdict(f)
-  if type(f) == "table" then
-    f = function() return M.copy(f) end
+function M.defaultdict(t)
+  local f
+  if type(t) == "function" then
+    f = t
+  else
+    f = function() return M.copy(t) end
   end
 
   return setmetatable({}, {

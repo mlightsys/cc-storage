@@ -25,15 +25,15 @@ function M.find_free_slots(containers)
   return slots
 end
 
-function M.itemize(peripheral)
-  local entry = {name = peripheral.getName(peripheral)}
-  local l = peripheral.list()
-  for i=1,peripheral.size() do
+function M.itemize(c)
+  local entry = {name = peripheral.getName(c)}
+  local l = c.list()
+  for i=1,c.size() do
     local slot = l[i] or {}
     table.insert(entry, {
       name = slot.name,
       count = slot.count or 0,
-      limit = peripheral.getItemLimit(i),
+      limit = c.getItemLimit(i),
     })
   end
   return entry

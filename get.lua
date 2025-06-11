@@ -21,38 +21,42 @@ local function get(item_name, amount)
     for slot, item in ipairs(container) do
       if item.name ~= item_name then goto next_slot end
 
-      for _, entry in ripairs(freeSlots[item.name]) do
-        amount = amount - move_item(container.name, slot, math.min(amount, item.count), entry, item.name)
+      for _, entry in ripairs(freeSlots[item_name]) do
+        amount = amount - move_item(container.name, slot, math.min(amount, item.count), entry, item_name)
         if amount == 0 then return end
         if entry.free == 0 then
-          table.remove(freeSlots[item.name])
+          table.remove(freeSlots[item_name])
         end
         if item.count == 0 then goto next_slot end
       end
 
       for _, entry in ripairs(freeSlots[""]) do
-        amount = amount - move_item(container.name, slot, math.min(amount, item.count), entry, item.name)
+        amount = amount - move_item(container.name, slot, math.min(amount, item.count), entry, item_name)
         if amount == 0 then return end
         table.remove(freeSlots[""])
         if entry.free ~= 0 then
-          table.insert(freeSlots[item.name], entry)
+          table.insert(freeSlots[item_name], entry)
         end
         if item.count == 0 then goto next_slot end
       end
 
       -- All free slots exhausted, amount still not 0
       print(("ERROR: Not enough space in chest (needs space for %d more %s)"):format(amount, item_name))
-      return
+      goto fun_end -- For some reason a return statement here is invalid
 
       ::next_slot::
     end
   end
   -- Went through entire storage, amount still not 0
   print(("ERROR: Not enough %s in storage (%d left)"):format(item_name, amount))
+
+  ::fun_end::
 end
 
 ok, err = pcall(get, argv[1], argv[2])
 storage.sync()
 if ok then
   print("File transfer successful :3")
+else
+  error(err)
 end

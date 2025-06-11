@@ -37,7 +37,7 @@ local function store()
 
     for i, incomplete in ripairs(freeSlots[""]) do
       count = count - move_item(slot, count, incomplete, item.name)
-      table.remove(emptySlots, i)
+      table.remove(freeSlots[""], i)
       if incomplete.free > 0 then
         table.insert(freeSlots[item.name], incomplete)
       end
@@ -58,4 +58,6 @@ storage.sync()
 
 if ok then
   print("Items inserted successfully :3")
+else
+  error(err)
 end
