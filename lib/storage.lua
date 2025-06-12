@@ -2,44 +2,28 @@ local CACHE = "cache.lt"
 
 local M = {cache = {}}
 
-function M.move(dest, destSlot, src, srcSlot, name, count)
-  local destName, srcName
-  if type(src) == "string" then
-    srcName = src
-    src = peripheral.wrap(src)
-  else
-    srcName = peripheral.getName(src)
+function M.move(dest, destIdx, src, srcIdx, limit)
+  local destPeri = peripheral.wrap(dest.name)
+  local srcPeri = peripheral.wrap(src.name)
+
+  local destSlot = dest[destIdx]
+  local srcSlot = src[srcIdx]
+
+  local limit = math.min(limit or math.huge, srcSlot.count, destSlot.limit - destSlot.count)
+  if limit == 0 then return 0 end
+
+  local n = srcPeri.pushItems(dest.name, srcIdx, limit, destIdx)
+
+  if destSlot.count == 0 and n > 0 then
+    destSlot.name = srcSlot.name
+    destSlot.limit = destPeri.getItemLimit(destIdx)
   end
+  destSlot.count = destSlot.count + n
 
-  if type(dest) == "string" then
-    destName = dest
-    dest = peripheral.wrap(dest)
-  else
-    destName = peripheral.getName(dest)
-  end
-
-  local n = src.pushItems(destName, srcSlot, count, destSlot)
-
-  local destCache = M.cache.map[destName]
-  if destCache then
-    -- Despoit
-    local slot = destCache[destSlot]
-    if slot.count == 0 then
-      slot.limit = dest.getItemLimit(destSlot)
-    end
-    slot.name = name
-    slot.count = slot.count + count
-  end
-
-  local srcCache = M.cache.map[srcName]
-  if srcCache then
-    -- Extract
-    local slot = srcCache[srcSlot]
-    slot.count = slot.count - count
-    if slot.count <= 0 then
-      slot.name = nil
-      slot.limit = src.getItemLimit(srcSlot)
-    end
+  srcSlot.count = srcSlot.count - n
+  if srcSlot.count <= 0 then
+    srcSlot.name = nil
+    srcSlot.limit = srcPeri.getItemLimit(srcIdx)
   end
 
   return n
