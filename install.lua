@@ -1,12 +1,11 @@
 local URL = "https://raw.githubusercontent.com/mlightsys/cc-storage/refs/heads/main/"
 
 local files = {
-  "lib/container.lua",
-  "lib/storage.lua",
+  "lib/inventory.lua",
   "lib/util.lua",
   "du.lua",
   "get.lua",
-  "mkcache.lua",
+  "mkindex.lua",
   "store.lua",
 }
 

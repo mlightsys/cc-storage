@@ -1,10 +1,10 @@
 local util = require("lib/util")
-local storage = require("lib/storage")
-local container = require("lib/container")
+local inventory = require("lib/inventory")
+local ItemAllocator, Inventory, Index = inventory.ItemAllocator, inventory.Inventory, inventory.Index
 
 local chest = peripheral.find("minecraft:chest")
 
-local cache = storage.load()
+local index = Index.from_file()
 local argv = {...}
 
 local function get(item_name, amount)
@@ -12,9 +12,9 @@ local function get(item_name, amount)
     item_name = "minecraft:" .. item_name
   end
 
-  local allocator = container.item_allocator({container.itemize(chest)})
+  local allocator = ItemAllocator({Inventory(chest)})
   local ok
-  for _, container in ipairs(cache.list) do
+  for _, container in ipairs(index) do
     for slot, item in ipairs(container) do
       if item.name ~= item_name then goto next_slot end
 
@@ -36,7 +36,7 @@ local function get(item_name, amount)
 end
 
 ok, err = pcall(get, argv[1], argv[2])
-storage.sync()
+index:write()
 if ok then
   print("File transfer successful :3")
 else

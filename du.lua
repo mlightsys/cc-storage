@@ -1,14 +1,15 @@
 local util = require("lib/util")
-local storage = require("lib/storage")
+local inventory = require("lib/inventory")
 
+local Index = inventory.Index
 local defaultdict = util.defaultdict
 
-local cache = storage.load()
+local index = Index.from_file()
 
 local capacity = 0
 local countMap = defaultdict(0)
-for _, container in ipairs(cache.list) do
-  for _, item in ipairs(container) do
+for _, inventory in ipairs(index) do
+  for _, item in ipairs(inventory) do
     capacity = capacity + item.limit
     if item.name ~= nil then
       countMap[item.name] = countMap[item.name] + item.count

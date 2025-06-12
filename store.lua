@@ -1,14 +1,14 @@
 local chest = peripheral.find("minecraft:chest")
 local ripairs = require("lib/util").ripairs
 
-local storage = require("lib/storage")
-local container = require("lib/container")
+local inventory = require("lib/inventory")
+local ItemAllocator, Index, Inventory = inventory.ItemAllocator, inventory.Index, inventory.Inventory
 
-local cache = storage.load()
+local index = Index.from_file()
 
 local function store()
-  local chest = container.itemize(chest)
-  local allocator = container.item_allocator(cache.list)
+  local chest = Inventory(chest)
+  local allocator = ItemAllocator(index)
 
   for slot, item in ipairs(chest) do
     if item.name == nil then goto item_moved end
@@ -29,7 +29,7 @@ local function store()
 end
 
 ok, err = pcall(store)
-storage.sync()
+index:write()
 
 if ok then
   print("Items inserted successfully :3")
