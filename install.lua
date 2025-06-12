@@ -3,10 +3,7 @@ local URL = "https://raw.githubusercontent.com/mlightsys/cc-storage/refs/heads/m
 local files = {
   "lib/inventory.lua",
   "lib/util.lua",
-  "du.lua",
-  "get.lua",
-  "mkindex.lua",
-  "store.lua",
+  "storage.lua",
 }
 
 local function download_file(url, path)

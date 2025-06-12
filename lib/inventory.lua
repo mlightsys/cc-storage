@@ -137,14 +137,18 @@ function M.Index.from_inventories(inventories)
 end
 
 function M.Index.from_file()
-  local f = fs.open(INDEX, "r")
+  local f, err = fs.open(INDEX, "r")
+  if f == nil then error(err) end
+
   local t = textutils.unserialize(f.readAll())
   f.close()
   return setmetatable(t, M.Index)
 end
 
 function M.Index:write()
-  local f = fs.open(INDEX, "w")
+  local f, err = fs.open(INDEX, "w")
+  if f == nil then error(err) end
+
   local s = textutils.serialize(self, {compact = true})
   f.write(s)
   f.close()
