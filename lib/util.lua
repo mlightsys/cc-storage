@@ -3,7 +3,7 @@ local M = {}
 M.ripairs = (function()
   local function iter(t, i)
     i = i - 1
-    if i ~= 0 then
+    if i > 0 then
       return i, t[i]
     end
   end
@@ -18,25 +18,25 @@ function M.defaultdict(t)
   if type(t) == "function" then
     f = t
   elseif type(t) == "table" then
-    f = function() return M.copy(t) end
+    f = function() return M.merge({}, t) end
   else
     f = function() return t end
   end
 
   return setmetatable({}, {
     __index = function(t, k)
-      t[k] = f()
+      t[k] = f(k)
       return t[k]
     end,
   })
 end
 
-function M.copy(t)
-  local new = {}
-  for k, v in pairs(t) do
-    new[k] = v
+function M.merge(dest, src)
+  for k, v in pairs(src) do
+    dest[k] = v
   end
-  return new
+  return dest
+end
 end
 
 return M
