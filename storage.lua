@@ -1,7 +1,7 @@
 local util = require("lib/util")
 local inventory = require("lib/inventory")
 
-local defaultdict = util.defaultdict
+local defaultdict, colorprint = util.defaultdict, util.colorprint
 local ItemAllocator, Inventory, Index = inventory.ItemAllocator, inventory.Inventory, inventory.Index
 
 local chest = peripheral.find("minecraft:chest")
@@ -14,12 +14,12 @@ local function get(item_name, amount)
 
   local ok, amount = util.parse_item_amount(amount)
   if not ok then
-    print(("ERROR: %s"):format(amount))
+    colorprint("<fg:e>ERROR: %s", amount)
     return
   end
 
   if amount < 0 then
-    print("ERROR: Amount cannot be negative")
+    colorprint("<fg:e>ERROR: Amount cannot be negative")
     return
   elseif amount == 0 then
     return
@@ -34,7 +34,7 @@ local function get(item_name, amount)
 
       if not ok then
         -- All free slots exhausted, amount still not 0
-        print(("ERROR: Not enough space in chest (needs space for %d more %s)"):format(amount, item_name))
+        colorprint("<fg:e>ERROR: Not enough space in chest (needs space for %d more %s)", amount, item_name)
         return
       end
 
@@ -44,7 +44,7 @@ local function get(item_name, amount)
     end
   end
   -- Went through entire storage, amount still not 0
-  print(("ERROR: Not enough %s in storage (%d left)"):format(item_name, amount))
+  colorprint("<fg:e>ERROR: Not enough %s in storage (%d left)", item_name, amount)
 end
 
 local function store()
