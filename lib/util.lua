@@ -39,24 +39,24 @@ function M.merge(dest, src)
 end
 
 function M.parse_item_amount(input)
-  if type(input) == "number" then return input end
+  if type(input) == "number" then return true, input end
 
   local _, _, n, unit = string.find(input, "^(-?%d+)(%a*)$")
 
   if n == nil then
-    error(("Not a number: %s"):format(input))
+    return false, ("Not a number: %s"):format(input)
   end
 
   n = tonumber(n)
   unit = string.lower(unit)
 
   if unit == "s" then
-    return n * 64
+    return true, n * 64
   elseif unit == "" then
-    return n
+    return true, n
   end
 
-  error(("Invalid unit: %s"):format(unit))
+  return false, ("Invalid unit: %s"):format(unit)
 end
 
 return M

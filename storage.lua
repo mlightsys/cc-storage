@@ -12,7 +12,12 @@ local function get(item_name, amount)
     item_name = "minecraft:" .. item_name
   end
 
-  amount = util.parse_item_amount(amount)
+  local ok, amount = util.parse_item_amount(amount)
+  if not ok then
+    print(("ERROR: %s"):format(amount))
+    return
+  end
+
   if amount < 0 then
     print("ERROR: Amount cannot be negative")
     return
@@ -21,7 +26,6 @@ local function get(item_name, amount)
   end
 
   local allocator = ItemAllocator({Inventory(chest)})
-  local ok
   for _, container in ipairs(index) do
     for slot, item in ipairs(container) do
       if item.name ~= item_name then goto next_slot end
