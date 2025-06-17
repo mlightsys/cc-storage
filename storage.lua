@@ -106,7 +106,7 @@ local function mkindex()
     table.insert(l, Inventory(b))
   end
 
-  local index = Index.from_inventories()
+  local index = Index.from_inventories(l)
   local n = index:write()
 
   print(("Wrote %d bytes of index"):format(n))
